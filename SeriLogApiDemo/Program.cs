@@ -8,27 +8,28 @@ using System.Data.Common;
 var builder = WebApplication.CreateBuilder(args);
 
 //Serilog Config
+Serilog.Debugging.SelfLog.Enable(Console.Error);
 
 //Appsettings.json configuration
 builder.Host.UseSerilog((ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuration));
-Serilog.Debugging.SelfLog.Enable(Console.Error);
 
 //Code-based configuration(Inline)
 //method 1
 //builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext} {Message}{NewLine}{Exception}")
-//                                        .WriteTo.File(path: "Logs/log.txt"
-//                                                      ,outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] [{Action}] {Message}{NewLine}{Exception}"
-//                                                      ,rollingInterval: RollingInterval.Day
-//                                                      ,flushToDiskInterval: TimeSpan.FromSeconds(5))
-//                                        .WriteTo.MSSqlServer(connectionString: "Server = DESKTOP-AETEI14\\SQLEXPRESS; Database = SeriLog;Trusted_Connection = true; Encrypt = False"
-//                                                             ,sinkOptions: new MSSqlServerSinkOptions()
-//                                                             {
-//                                                                 AutoCreateSqlTable = false,
-//                                                                 TableName = "seriLog",
-//                                                                 BatchPostingLimit = 100,
-//                                                                 BatchPeriod = TimeSpan.FromSeconds(10.0),
-//                                                             }
-//                                                             ,restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error));
+//                                       .Enrich.FromLogContext()
+//                                       .WriteTo.File(path: "Logs/log.txt"
+//                                                     , outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] [{Action}] {Message}{NewLine}{Exception}"
+//                                                     , rollingInterval: RollingInterval.Day
+//                                                     , flushToDiskInterval: TimeSpan.FromSeconds(5))
+//                                       .WriteTo.MSSqlServer(connectionString: "Server = DESKTOP-AETEI14\\SQLEXPRESS; Database = SeriLog;Trusted_Connection = true; Encrypt = False"
+//                                                            , sinkOptions: new MSSqlServerSinkOptions()
+//                                                            {
+//                                                                AutoCreateSqlTable = false,
+//                                                                TableName = "seriLog",
+//                                                                BatchPostingLimit = 100,
+//                                                                BatchPeriod = TimeSpan.FromSeconds(10.0),
+//                                                            }
+//                                                            , restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error));
 
 //method 2
 //Log.Logger = new LoggerConfiguration()
@@ -42,20 +43,21 @@ Serilog.Debugging.SelfLog.Enable(Console.Error);
 
 //method 3
 //Log.Logger = new LoggerConfiguration()
+//            .Enrich.FromLogContext()
 //            .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext} {Message}{NewLine}{Exception}")
 //            .WriteTo.File(path: "Logs/log.txt"
-//                           ,outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] [{Action}] {Message}{NewLine}{Exception}"
-//                           ,rollingInterval: RollingInterval.Day
-//                           ,flushToDiskInterval: TimeSpan.FromSeconds(5))
+//                           , outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] [{Action}] {Message}{NewLine}{Exception}"
+//                           , rollingInterval: RollingInterval.Day
+//                           , flushToDiskInterval: TimeSpan.FromSeconds(5))
 //            .WriteTo.MSSqlServer(connectionString: "Server = DESKTOP-AETEI14\\SQLEXPRESS; Database = SeriLog;Trusted_Connection = true; Encrypt = False"
-//                                ,sinkOptions: new MSSqlServerSinkOptions()
+//                                , sinkOptions: new MSSqlServerSinkOptions()
 //                                {
 //                                    AutoCreateSqlTable = false,
 //                                    TableName = "seriLog",
 //                                    BatchPostingLimit = 100,
 //                                    BatchPeriod = TimeSpan.FromSeconds(10.0),
 //                                }
-//                                ,restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error)
+//                                , restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error)
 //            .CreateLogger();
 //builder.Services.AddLogging(loggingBuilder =>
 //{
@@ -66,7 +68,6 @@ Serilog.Debugging.SelfLog.Enable(Console.Error);
 // Add services to the container.
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -90,3 +91,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+Log.CloseAndFlush();
