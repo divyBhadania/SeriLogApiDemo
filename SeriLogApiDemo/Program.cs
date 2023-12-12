@@ -15,24 +15,47 @@ Serilog.Debugging.SelfLog.Enable(Console.Error);
 
 //Code-based configuration(Inline)
 //method 1
-//builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console(outputTemplate : "[{Timestamp:HH:mm:ss} {Level}] {SourceContext} {Message}{NewLine}{Exception}")
-//                                        .WriteTo.File(path : "Logs/log.txt" 
-//                                                      ,outputTemplate : "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] [{Action}] {Message}{NewLine}{Exception}"
-//                                                      ,rollingInterval : RollingInterval.Day
-//                                                      ,flushToDiskInterval : TimeSpan.FromSeconds(5))
+//builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext} {Message}{NewLine}{Exception}")
+//                                        .WriteTo.File(path: "Logs/log.txt"
+//                                                      ,outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] [{Action}] {Message}{NewLine}{Exception}"
+//                                                      ,rollingInterval: RollingInterval.Day
+//                                                      ,flushToDiskInterval: TimeSpan.FromSeconds(5))
 //                                        .WriteTo.MSSqlServer(connectionString: "Server = DESKTOP-AETEI14\\SQLEXPRESS; Database = SeriLog;Trusted_Connection = true; Encrypt = False"
-//                                        ,sinkOptions: new MSSqlServerSinkOptions()
-//                                                        {
-//                                                            AutoCreateSqlTable = false,
-//                                                            TableName = "seriLog",
-//                                                            BatchPostingLimit = 100,
-//                                                            BatchPeriod = TimeSpan.FromSeconds(10.0),
-//                                                        }
-//                                        ,restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error));
+//                                                             ,sinkOptions: new MSSqlServerSinkOptions()
+//                                                             {
+//                                                                 AutoCreateSqlTable = false,
+//                                                                 TableName = "seriLog",
+//                                                                 BatchPostingLimit = 100,
+//                                                                 BatchPeriod = TimeSpan.FromSeconds(10.0),
+//                                                             }
+//                                                             ,restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error));
 
 //method 2
 //Log.Logger = new LoggerConfiguration()
 //            .ReadFrom.Configuration(builder.Configuration)
+//            .CreateLogger();
+//builder.Services.AddLogging(loggingBuilder =>
+//{
+//    loggingBuilder.ClearProviders();
+//    loggingBuilder.AddSerilog();
+//});
+
+//method 3
+//Log.Logger = new LoggerConfiguration()
+//            .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext} {Message}{NewLine}{Exception}")
+//            .WriteTo.File(path: "Logs/log.txt"
+//                           ,outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] [{Action}] {Message}{NewLine}{Exception}"
+//                           ,rollingInterval: RollingInterval.Day
+//                           ,flushToDiskInterval: TimeSpan.FromSeconds(5))
+//            .WriteTo.MSSqlServer(connectionString: "Server = DESKTOP-AETEI14\\SQLEXPRESS; Database = SeriLog;Trusted_Connection = true; Encrypt = False"
+//                                ,sinkOptions: new MSSqlServerSinkOptions()
+//                                {
+//                                    AutoCreateSqlTable = false,
+//                                    TableName = "seriLog",
+//                                    BatchPostingLimit = 100,
+//                                    BatchPeriod = TimeSpan.FromSeconds(10.0),
+//                                }
+//                                ,restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error)
 //            .CreateLogger();
 //builder.Services.AddLogging(loggingBuilder =>
 //{
