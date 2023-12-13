@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using Serilog;
 using Serilog.Sinks.MSSqlServer;
+using Serilog.Sinks.PeriodicBatching;
+using SeriLogApiDemo.Middleware;
+using SeriLogApiDemo.Sink;
 using System.Configuration;
 using System.Data.Common;
 
@@ -11,10 +14,21 @@ var builder = WebApplication.CreateBuilder(args);
 Serilog.Debugging.SelfLog.Enable(Console.Error);
 
 //Appsettings.json configuration
-builder.Host.UseSerilog((ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuration));
+builder.Host.UseSerilog((ctx, lc) => {
+    lc.ReadFrom.Configuration(ctx.Configuration);
+    #region custom sink
+      //.WriteTo.Sink(new LoggerSink(), restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning)
+      //.WriteTo.Sink(new PeriodicBatchingSink(new BatchLoggerSink(), new PeriodicBatchingSinkOptions
+      //{
+      //    BatchSizeLimit = 100,
+      //    Period = TimeSpan.FromSeconds(10)
+      //})
+      // ,restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error);
+    #endregion
+});
 
 //Code-based configuration(Inline)
-//method 1
+#region method1
 //builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext} {Message}{NewLine}{Exception}")
 //                                       .Enrich.FromLogContext()
 //                                       .WriteTo.File(path: "Logs/log.txt"
@@ -30,7 +44,9 @@ builder.Host.UseSerilog((ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuration
 //                                                                BatchPeriod = TimeSpan.FromSeconds(10.0),
 //                                                            }
 //                                                            , restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error));
+#endregion
 
+#region method2
 //method 2
 //Log.Logger = new LoggerConfiguration()
 //            .ReadFrom.Configuration(builder.Configuration)
@@ -40,8 +56,9 @@ builder.Host.UseSerilog((ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuration
 //    loggingBuilder.ClearProviders();
 //    loggingBuilder.AddSerilog();
 //});
+#endregion
 
-//method 3
+#region method3
 //Log.Logger = new LoggerConfiguration()
 //            .Enrich.FromLogContext()
 //            .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext} {Message}{NewLine}{Exception}")
@@ -64,10 +81,14 @@ builder.Host.UseSerilog((ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuration
 //    loggingBuilder.ClearProviders();
 //    loggingBuilder.AddSerilog();
 //});
+#endregion
 
-// Add services to the container.
+#region azure ad auth
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
+#endregion
+
+// Add services to the container.
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -83,6 +104,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseSerilogRequestLogging();  // Only if we are using builder.Host method.
+app.UseUserLogging();
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

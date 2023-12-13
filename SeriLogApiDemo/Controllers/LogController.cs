@@ -19,5 +19,19 @@ namespace SeriLogApiDemo.Controllers
             _logger.LogInformation("information logged");
             return Ok();
         }
+
+        [HttpGet("Warning")]
+        public IActionResult Warning()
+        {
+            _logger.LogWarning("warning logged");
+            return Ok();
+        }
+
+        [HttpGet("GenerateError")]
+        public IActionResult GenerateError()
+        {
+            throw new NotImplementedException();
+            return Ok();
+        }
     }
 }
