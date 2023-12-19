@@ -9,6 +9,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.20" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.20" />
 		<PackageReference Include="Microsoft.Identity.Web" Version="1.16.0" />
+		<PackageReference Include="Serilog.Sinks.Discord" Version="1.2.1" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
 		<PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
 		<PackageReference Include="Serilog.Sinks.MSSqlServer" Version="6.3.0" />

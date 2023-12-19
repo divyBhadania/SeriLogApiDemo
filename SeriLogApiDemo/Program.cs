@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using Serilog;
+using Serilog.Sinks.Discord;
 using Serilog.Sinks.MSSqlServer;
 using Serilog.Sinks.PeriodicBatching;
 using SeriLogApiDemo.Middleware;
@@ -25,7 +26,10 @@ builder.Host.UseSerilog((ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuration
       //})
     // ,restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error)
     #endregion
-});
+    #region Discord sink
+    //.WriteTo.Discord(1186531800831492186, "i80qrkx8U6iGG0oCyGWdPXVqqH7CXD86bEKszDVRthkgLtn0H8FqJqxy2C7YhebGRfAn", restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error)
+    #endregion
+);
 
 //Code-based configuration(Inline)
 #region method1
