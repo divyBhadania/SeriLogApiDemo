@@ -16,7 +16,6 @@ Serilog.Debugging.SelfLog.Enable(Console.Error);
 
 //Appsettings.json configuration
 builder.Host.UseSerilog((ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuration)
-    lc.ReadFrom.Configuration(ctx.Configuration);
     #region custom sink
       //.WriteTo.Sink(new LoggerSink(), restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning)
       //.WriteTo.Sink(new PeriodicBatchingSink(new BatchLoggerSink(), new PeriodicBatchingSinkOptions
