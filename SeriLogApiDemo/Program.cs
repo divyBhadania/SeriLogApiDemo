@@ -14,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 Serilog.Debugging.SelfLog.Enable(Console.Error);
 
 //Appsettings.json configuration
-builder.Host.UseSerilog((ctx, lc) => {
+builder.Host.UseSerilog((ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuration)
     lc.ReadFrom.Configuration(ctx.Configuration);
     #region custom sink
       //.WriteTo.Sink(new LoggerSink(), restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning)
@@ -23,7 +23,7 @@ builder.Host.UseSerilog((ctx, lc) => {
       //    BatchSizeLimit = 100,
       //    Period = TimeSpan.FromSeconds(10)
       //})
-      // ,restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error);
+    // ,restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error)
     #endregion
 });
 
