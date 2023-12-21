@@ -15,20 +15,31 @@ var builder = WebApplication.CreateBuilder(args);
 Serilog.Debugging.SelfLog.Enable(Console.Error);
 
 //Appsettings.json configuration
-builder.Host.UseSerilog((ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuration)
-    #region custom sink
-      //.WriteTo.Sink(new LoggerSink(), restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning)
-      //.WriteTo.Sink(new PeriodicBatchingSink(new BatchLoggerSink(), new PeriodicBatchingSinkOptions
-      //{
-      //    BatchSizeLimit = 100,
-      //    Period = TimeSpan.FromSeconds(10)
-      //})
-    // ,restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error)
-    #endregion
-    #region Discord sink
-    //.WriteTo.Discord(1186531800831492186, "i80qrkx8U6iGG0oCyGWdPXVqqH7CXD86bEKszDVRthkgLtn0H8FqJqxy2C7YhebGRfAn", restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error)
-    #endregion
-);
+builder.Host.UseSerilog((ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuration));
+
+#region custom sink
+//builder.Host.UseSerilog((ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuration)
+//.WriteTo.Sink(new LoggerSink(), restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning)
+//.WriteTo.Sink(new PeriodicBatchingSink(new BatchLoggerSink(), new PeriodicBatchingSinkOptions
+//{
+//    BatchSizeLimit = 100,
+//    Period = TimeSpan.FromSeconds(10)
+//})
+// , restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error)
+#region Google chat
+//.WriteTo.Sink(new PeriodicBatchingSink(new GoogleChatSink(), new PeriodicBatchingSinkOptions
+//{
+//    BatchSizeLimit = 100,
+//    Period = TimeSpan.FromSeconds(10),
+//    EagerlyEmitFirstEvent = false,  // set default to false, not usable for emailing
+//    QueueLimit = 10000
+//}))
+#endregion
+#region Discord sink
+//.WriteTo.Discord(1186531800831492186, "i80qrkx8U6iGG0oCyGWdPXVqqH7CXD86bEKszDVRthkgLtn0H8FqJqxy2C7YhebGRfAn", restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error)
+#endregion
+//);
+#endregion
 
 //Code-based configuration(Inline)
 #region method1

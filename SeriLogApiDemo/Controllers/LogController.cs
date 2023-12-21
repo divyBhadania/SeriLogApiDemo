@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
+using Serilog.Events;
 
 namespace SeriLogApiDemo.Controllers
 {
@@ -14,20 +16,41 @@ namespace SeriLogApiDemo.Controllers
         }
 
         [HttpGet("Information")]
-        public IActionResult InformationLog()
+        public IActionResult Information()
         {
-            _logger.LogInformation("information logged");
+            _logger.LogInformation("Information logged");
             return Ok();
         }
 
         [HttpGet("Warning")]
         public IActionResult Warning()
         {
-            _logger.LogWarning("warning logged");
+            _logger.LogWarning("Warning logged");
+            return Ok();
+        }
+        
+        [HttpGet("Debug")]
+        public IActionResult Debug()
+        {
+            _logger.LogDebug("Debug logged");
             return Ok();
         }
 
-        [HttpGet("GenerateError")]
+        [HttpGet("Error")]
+        public IActionResult Error()
+        {
+            _logger.LogError("Error logged");
+            return Ok();
+        }
+
+        [HttpGet("Fatal")]
+        public IActionResult Fatal()
+        {
+            _logger.LogCritical("Fatal logged");
+            return Ok();
+        }
+
+        [HttpGet("GenerateException")]
         public IActionResult GenerateError()
         {
             throw new NotImplementedException();
